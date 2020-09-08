@@ -1,0 +1,89 @@
+<?xml version="1.0"?>
+<definitions name="OrderList" targetNamespace="urn:OrderList" xmlns:tns="urn:OrderList"  xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns="http://schemas.xmlsoap.org/wsdl/">
+  <types>
+    <xsd:schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="urn:Orders">
+      <xsd:element name="getShipVia" type="xsd:string" />
+
+      <xsd:complexType name='return'>
+      <xsd:complexContent>
+      <xsd:restriction base='soapenc:Array'>
+        <xsd:attribute wsdl:arrayType='Orders[]' ref='soapenc:arrayType' />
+      </xsd:restriction>
+    </xsd:complexContent>
+    </xsd:complexType>
+
+    <xsd:complexType name='Orders'>
+      <xsd:all>
+            <xsd:element
+              name='OrderID'
+              type='xsd:int'/>
+            <xsd:element
+              name='OrderDate'
+              type='xsd:dateTime'/>
+            <xsd:element
+              name='RequiredDate'
+              type='xsd:dateTime'/>
+            <xsd:element
+              name='ShippedDate'
+              type='xsd:dateTime'/>
+            <xsd:element
+              name='Freight'
+              type='xsd:decimal'/>
+            <xsd:element
+              name='ShipName'
+              type='xsd:string'/>
+            <xsd:element
+              name='ShipAddress'
+              type='xsd:string'/>
+             <xsd:element
+              name='ShipCity'
+              type='xsd:string'/>
+            <xsd:element
+              name='ShipRegion'
+              type='xsd:string'/>
+            <xsd:element
+              name='ShipPostalCode'
+              type='xsd:string'/>
+            <xsd:element
+              name='ShipCountry'
+              type='xsd:string'/>			  
+      </xsd:all>
+    </xsd:complexType> 	  
+	</xsd:schema>			
+  </types>
+  
+  <message name="listOrders">
+    <part name="ShipVia" type="tns:getShipVia" />
+  </message>
+  
+  <message name="listOrdersResponse">
+    <part name="return" type="tns:return" />
+  </message>  
+  
+  <portType name="OrdersPort">
+    <operation name="listOrders">
+	  <input message="tns:listOrders" />
+	  <output message="tns:listOrdersResponse" />
+	</operation>
+  </portType>
+  
+  <binding name="OrdersBinding" type="tns:OrdersPort">
+    <soap:binding style="rpc" transport="http://schemas.xmlsoap.org/soap/http" />
+	  <operation name="listOrders">
+	    <soap:operation soapAction="urn:OrdersAction" />
+		<input>
+		  <soap:body use="encoded" namespace="urn:Orders" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />		  
+		</input>
+		<output>
+		  <soap:body use="encoded" namespace="urn:Orders" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />		  
+		</output>
+	  </operation>
+  </binding>
+  
+  <service name="OrdersService">
+    <port name="OrdersPort" binding="tns:OrdersBinding">
+	  <soap:address location="http://localhost/soap2/server.php" />
+	</port>
+  </service>
+    
+</definitions>
